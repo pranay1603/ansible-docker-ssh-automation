@@ -1,0 +1,91 @@
+- name: "further in task 10 retrieve a new container ip nd update the inventory so that webserver can be confgure inside that container"
+
+  hosts: localhost
+  vars_prompt:
+  - name: "web_port"
+    prompt: "\nEnter the port for webserver to expose "
+    private: no
+
+  - name: "image"
+    prompt: "\nEnter the image name"
+    private: no
+
+  - name: "container"
+    prompt: "\nEnter the container name "
+    private: no    
+
+  tasks:
+
+  - name: "making the yum configure for docker repo"
+    yum_repository:
+       name: "docker"
+       description: "Docker"
+       baseurl: "https://download.docker.com/linux/centos/7/x86_64/stable/"
+       gpgcheck: no
+
+
+  - name: "installing docker"
+    shell: "yum install docker-ce --nobest -y"
+    changed_when: false
+  
+  - name: "starting the service of docker"
+    service:
+        name: "docker" 
+        state: started 
+
+  - name: "installing docker sdk"
+    pip:
+        name: "docker"    
+
+
+  - name: "launching container"
+    docker_container:
+       name: "{{ container }}"
+       image: "{{ image }}"
+       state: started
+       ports:
+       - "{{ web_port }}:80"       
+  
+    register: x   
+
+  - debug:
+       var: x.container.NetworkSettings.IPAddress 
+
+  - name: "adding ip to inventory"
+    blockinfile:
+            path: "./invent.txt"
+            create: yes
+            block: |
+                  [docker]
+                  {{ x.container.NetworkSettings.IPAddress }} ansible_ssh_user=root ansible_ssh_pass=docker ansible_connection=ssh
+
+  - pause:
+      seconds: 5
+
+
+- name: "Now configuring container for webserver"
+
+  hosts: docker
+
+  vars:
+  - os_name: "{{ ansible_facts['distribution'] }}"
+
+  tasks:
+  - debug:
+      var: os_name        
+
+  - name: "installing webserver package"
+    package:
+        name: "httpd"
+        state: present
+    when: os_name == 'CentOS' 
+  
+  - name: "configuring webpage"
+    template:
+      src: "index.html"
+      dest: "/var/www/html/index.html"
+
+  - name: "starting the service"
+    command: "/usr/sbin/httpd"
+
+                 

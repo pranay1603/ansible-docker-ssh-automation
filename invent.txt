@@ -1,0 +1,4 @@
+# BEGIN ANSIBLE MANAGED BLOCK
+[docker]
+172.17.0.2 ansible_ssh_user=root ansible_ssh_pass=docker ansible_connection=ssh
+# END ANSIBLE MANAGED BLOCK
