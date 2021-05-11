@@ -14,7 +14,7 @@
     2.  <b>How we can configure any thing inside container with the help of Ansible </b>
     3. <b> Docker networking how docker manages its network . </b>
 
-<h>How to Install<h1>
+<h>How to Install</h1>
 1. You should have a ansible installed in your system . To install you can use <b>pip3 install ansible</b> as a command
  
 2. In this project i have used redhat 8 as my base OS.
