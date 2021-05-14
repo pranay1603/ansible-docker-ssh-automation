@@ -7,7 +7,7 @@
 
 ♦I build this project because i want to know how we can build our own docker image nd the main thing is after creating image how we can configure webserver inside that container .
 
-♦ This project solve the use-case of in normal containers there is no ssh , so how we can configure that container through ansible because behind the seen ansible use ssh to connect with it target node.
+♦ This project solve the use-case of : in normal containers there is no ssh , so how we can configure that container through ansible because behind the seen ansible use ssh to connect with it target node.
 
 ♦ While doing this project
      1. <b>I learn how we can build our own customize image.</b> 
